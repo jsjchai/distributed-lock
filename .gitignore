@@ -31,4 +31,7 @@ hs_err_pid*
 .settings
 target
 .DS_Store
+.mvn
+mvnw
+mvnw.*
 
