@@ -1,4 +1,4 @@
-package com.jsjchai.distributed.distributedlock;
+package com.jsjchai.distributed.lock;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.jsjchai.distributed.distributedlock.entity;
+package com.jsjchai.distributed.lock.entity;
 
 import lombok.Getter;
 import lombok.Setter;

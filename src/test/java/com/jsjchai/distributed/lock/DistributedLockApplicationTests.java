@@ -1,4 +1,4 @@
-package com.jsjchai.distributed.distributedlock;
+package com.jsjchai.distributed.lock;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

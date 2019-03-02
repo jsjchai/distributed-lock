@@ -1,4 +1,4 @@
-package com.jsjchai.distributed.distributedlock.dao;
+package com.jsjchai.distributed.lock.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
