@@ -20,20 +20,21 @@ public class CacheProvider {
     }
 
     public static <T> boolean set(String key, T value) {
-        return set(key, JSON.toJSONString(value),-1L);
+
+        return template.execute((RedisCallback<Boolean>) connection -> {
+            RedisSerializer<String> serializer = template.getStringSerializer();
+            connection.set(serializer.serialize(key), serializer.serialize(JSON.toJSONString(value)));
+            return true;
+        });
     }
 
     public static boolean set(String key, String value, long validTime) {
 
-        return template.execute(new RedisCallback<Boolean>() {
-
-            @Override
-            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-                RedisSerializer<String> serializer = template.getStringSerializer();
-                connection.set(serializer.serialize(key), serializer.serialize(value));
-                connection.expire(serializer.serialize(key), validTime);
-                return true;
-            }
+        return template.execute((RedisCallback<Boolean>) connection -> {
+            RedisSerializer<String> serializer = template.getStringSerializer();
+            connection.set(serializer.serialize(key), serializer.serialize(value));
+            connection.expire(serializer.serialize(key), validTime);
+            return true;
         });
     }
 
@@ -54,6 +55,17 @@ public class CacheProvider {
 
     public static boolean del(String key) {
         return template.delete(key);
+    }
+
+    public static <T> boolean setNX(String key, T value, long validTime) {
+
+        return template.execute((RedisCallback<Boolean>) connection -> {
+            RedisSerializer<String> serializer = template.getStringSerializer();
+            byte[] bKey = serializer.serialize(key);
+            boolean setNXResult = connection.setNX(bKey,serializer.serialize(JSON.toJSONString(value)));
+            boolean sexpireResult = connection.expire(bKey, validTime);
+            return setNXResult && sexpireResult ;
+        });
     }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author jsjchai.
  */
@@ -34,5 +36,34 @@ public class RedisTest {
     @Test
     public void testSet(){
         CacheProvider.set("k1","123456",100L);
+        CacheProvider.set("k2","123456");
+    }
+
+    @Test
+    public void testSetNX(){
+        CacheProvider.setNX("k3","123456",100L);
+    }
+
+    @Test
+    public void testThreadSetNX(){
+
+        int count = 10;
+        CountDownLatch latch = new CountDownLatch(count);
+        for(int i=0;i< count;i++){
+             new Thread(()->{
+               boolean b =  CacheProvider.setNX("k3","123456",100L);
+                System.out.println(Thread.currentThread().getName()+"---"+b);
+                 latch.countDown();
+            }).start();
+
+        }
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        }
+
     }
 }
